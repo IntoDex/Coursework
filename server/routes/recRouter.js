@@ -3,8 +3,8 @@ const recController = require('../controllers/recController')
 const router = new Router()
 
 router.post('/', recController.create )
-router.get('/',)
+router.get('/', recController.getAll)
 router.get('/:id',)
-router.delete('/',)
+router.delete('/', recController.delete)
 
 module.exports = router
