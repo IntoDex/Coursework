@@ -49,11 +49,6 @@ const Ingredients = sequelize.define('ingredients', {
 })
 
 // Связующие модели таблиц
-
-const TypeRec = sequelize.define('type_rec', {
-    id: {type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-})
-
 const CateRec = sequelize.define('cate_rec', {
     id: {type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
@@ -73,8 +68,8 @@ Rating.belongsTo(User)
 Favorite.hasMany(FavoriteRec)
 FavoriteRec.belongsTo(Favorite)
 
-//Type.hasMany(Recepte)
-//Recepte.belongsTo(Type)
+Type.hasMany(Recepte)
+Recepte.belongsTo(Type)
 
 //Category.hasMany(Recepte)
 //Recepte.belongsTo(Category)
@@ -89,9 +84,6 @@ Recepte.hasMany(FavoriteRec)
 FavoriteRec.belongsTo(Recepte)
 
 // Связующие
-Type.belongsToMany(Recepte, {through: TypeRec })
-Recepte.belongsToMany(Type, {through: TypeRec })
-
 Category.belongsToMany(Recepte, {through: CateRec })
 Recepte.belongsToMany(Category, {through: CateRec })
 
@@ -107,7 +99,6 @@ module.exports = {
     Category,
     Rating,
     Ingredients,
-    TypeRec,
     CateRec,
     IngRec
 }

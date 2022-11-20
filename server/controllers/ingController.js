@@ -3,8 +3,8 @@ const ApiError = require('../error/ApiError');
 
 class IngController {
     async create(req, res) {
-        const {name} = req.body
-        const ingredients = await Ingredients.create({name})
+        const {name, description} = req.body
+        const ingredients = await Ingredients.create({name, description})
         return res.status(201).json(ingredients)
     }
 
