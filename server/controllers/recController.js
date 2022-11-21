@@ -29,17 +29,19 @@ function compairArr(arr1 = [], arr2 = []) {
 
 async function findrecepte(typeId, compArr, limit, offset) {
     let result = []
+    let loffset = compArr.length < (+limit)+(+offset) ?compArr.length:(+limit)+(+offset)
     if(typeId) {
-        for(let i = 0; i < compArr.length; i++) {
-            const t = await Recepte.findOne({where: {id:compArr[i], typeId}, limit, offset})
+        for(let i = offset; i < loffset; i++) {
+            console.log(i, compArr[i])
+            const t = await Recepte.findOne({where: {id:compArr[i], typeId}})
                 if(t) {
                     result.push(t) 
                 }
         }
     }
     else {
-        for(let i = 0; i < compArr.length; i++) {
-        const t = await Recepte.findOne({where: {id:compArr[i]}, limit, offset})
+        for(let i = offset; i < loffset; i++) {
+        const t = await Recepte.findOne({where: {id:compArr[i]}})
             if(t) {
                 result.push(t) 
             }
@@ -55,26 +57,30 @@ async function retrecept(typeId, catId, ingId, limit, offset) {
         let i = await ingrecs(ingId)
         const compArr = compairArr(c, i)
         result = await findrecepte(typeId, compArr, limit, offset)
+        result = { count: compArr.length, rows: result }
     }
 
     if(catId && !ingId) {
         let c = await caterecs(catId)
         const compArr = compairArr(c)
         result = await findrecepte(typeId, compArr, limit, offset)
+        result = { count: compArr.length, rows: result }
     }
 
     if(!catId && ingId) {
         let i = await ingrecs(ingId)
         const compArr = compairArr(i)
         result = await findrecepte(typeId, compArr, limit, offset)
+        result = { count: compArr.length, rows: result }
+
     }
 
     if(!catId && !ingId) {
         if(typeId) {
-            result = await Recepte.findAll({where: {typeId}, limit, offset})
+            result = await Recepte.findAndCountAll({where: {typeId}, limit, offset})
         }
         else {
-            result = await Recepte.findAll({limit, offset})
+            result = await Recepte.findAndCountAll({limit, offset})
         }
     }
     return result
@@ -120,11 +126,11 @@ class RecController {
         let offset = page * limit - limit
         let recepte = await retrecept(typeId, catId, ingId, limit, offset)
         
-        return res.json({count:recepte.length,rows:recepte})
+        return res.json(recepte)
     }
 
     async getOne(req, res) {
-        
+
     }
 
     async delete(req, res) {
