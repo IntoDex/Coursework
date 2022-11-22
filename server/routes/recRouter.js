@@ -4,7 +4,7 @@ const router = new Router()
 
 router.post('/', recController.create )
 router.get('/', recController.getAll)
-router.get('/:id',)
+router.get('/:id', recController.getOne)
 router.delete('/', recController.delete)
 
 module.exports = router

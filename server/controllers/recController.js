@@ -94,7 +94,6 @@ class RecController {
         // В Связующие таблицы
         const catjson = JSON.parse(catId)
         const ingjson = JSON.parse(ingId)
-        //console.log(Array.isArray (JSON.parse (ingId)))
         const {img} = req.files
         let fileName = uuid.v4() + ".jpg"
         img.mv(path.resolve(__dirname, '..', 'static', fileName))
@@ -119,18 +118,36 @@ class RecController {
     
 
     async getAll(req, res) {
-        let {typeId, limit, page, catId, ingId} = req.query
+        let {name, typeId, limit, page, catId, ingId} = req.query
         console.log(typeId, catId)
         page = page || 1
         limit = limit || 9
         let offset = page * limit - limit
         let recepte = await retrecept(typeId, catId, ingId, limit, offset)
-        
+
+        // Топорный поиск по названию 
+        if(name) {
+            recepte = await Recepte.findAndCountAll({where: {name}, limit, offset})
+        }
+        // if(!title) {
+        //     title = "%%";
+        // }
+        //  else {
+        //     title = %${title}%
+        //     name {[Op.iLike]: title}
+        // }
+
+
         return res.json(recepte)
     }
 
     async getOne(req, res) {
-
+        const {id} = req.params
+        const recepte = await Recepte.findOne({where: {id}
+            //include: [{model: CateRec, as: 'categoryId'}]
+            //include: [{model: IngRec, as: 'ingredientId'}]
+        })
+        return res.json(recepte)
     }
 
     async delete(req, res) {
