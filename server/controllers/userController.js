@@ -47,6 +47,35 @@ class UserController {
         const token = generateJwt(req.user.id, req.user.email, req.user.role)
         return res.json({token})
     }
+
+
+
+
+
+    async checkFav(req, res, next) {
+        const favorite = await Favorite.findAndCountAll() 
+        return res.json(favorite)
+    }
+
+    async addFav(req, res, next) {
+        try { 
+            const {recepteId, userId} = req.query // req.body
+            console.log(recepteId)
+            const favorite = await Favorite.create({userId, recepteId})
+            
+            return res.json(favorite)
+        }catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
+             
+    }
+
+    async delFav(req, res, next) {
+        const {id} = req.query
+        const favorite = await Favorite.destroy({where: {id}})
+        return res.json(favorite)
+    }
+
 }
 
 module.exports = new UserController()

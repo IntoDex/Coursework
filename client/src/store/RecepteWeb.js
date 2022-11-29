@@ -24,10 +24,10 @@ export default class RecepteWeb {
             {id: 2, name: "Апельсин"}
         ]
         this._receptes = [
-            {id: 1, name: "Пельмени", description: "Вкусное", rating: 5, img: cake},
-            {id: 2, name: "Борщ",description: "Вкусное", rating: 5, img: cake},
-            {id: 3, name: "Роллы", description: "Вкусное", rating: 5, img: cake},
-            {id: 4, name: "Суши", description: "Вкусное", rating: 5, img: cake},
+            {id: 1, name: "Пельмени", description: "Очень вкусное, но не очень ибо это ебанный торт, а не пельмени", rating: 3, img: cake},
+            {id: 2, name: "Борщ", description: "Вкусное, но не очень, опять же торт", rating: 4, img: cake},
+            {id: 3, name: "Роллы", description: "Не вкусное, шок, это опять же тот же самый торт", rating: 2, img: cake},
+            {id: 4, name: "Суши", description: "Сука, это опять тот же торт(((", rating: 1, img: cake},
         ]
         this._selectedType = {}
         this._selectedCat = {}

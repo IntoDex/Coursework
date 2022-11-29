@@ -7,7 +7,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 const CatBar = () => {
     const {recepte} = React.useContext(Context)
     return (
-        <Row className="d-flex">
+        <Container className="d-flex flex">
             {recepte.cats.map(cat =>
                 <Card
                     style={{cursor:'pointer'}}
@@ -20,7 +20,7 @@ const CatBar = () => {
 
                 </Card>
                 )}
-        </Row>
+        </Container>
       );
 };
 

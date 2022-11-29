@@ -129,15 +129,6 @@ class RecController {
         if(name) {
             recepte = await Recepte.findAndCountAll({where: {name}, limit, offset})
         }
-        // if(!title) {
-        //     title = "%%";
-        // }
-        //  else {
-        //     title = %${title}%
-        //     name {[Op.iLike]: title}
-        // }
-
-
         return res.json(recepte)
     }
 

@@ -10,14 +10,6 @@ const User = sequelize.define('user', {
     role: {type: DataTypes.STRING, defaultValue: "USER"},
 })
 
-const Favorite = sequelize.define('favorite', {
-    id: {type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-})
-
-const FavoriteRec = sequelize.define('favorite_rec', {
-    id: {type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-})
-
 const Recepte = sequelize.define('recepte', {
     id: {type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: {type: DataTypes.STRING, unique: true, allowNull: false},
@@ -49,6 +41,10 @@ const Ingredients = sequelize.define('ingredients', {
 })
 
 // Связующие модели таблиц
+const Favorite = sequelize.define('favorite', {
+    id: {type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true}
+})
+
 const CateRec = sequelize.define('cate_rec', {
     id: {type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
@@ -59,31 +55,25 @@ const IngRec = sequelize.define('ing_rec', {
 
 // Связи таблиц друг с другом
 
-User.hasOne(Favorite)
-Favorite.belongsTo(User)
+// User.hasMany(Favorite)
+// Favorite.belongsTo(User)
 
 User.hasMany(Rating)
 Rating.belongsTo(User)
 
-Favorite.hasMany(FavoriteRec)
-FavoriteRec.belongsTo(Favorite)
-
 Type.hasMany(Recepte)
 Recepte.belongsTo(Type)
-
-//Category.hasMany(Recepte)
-//Recepte.belongsTo(Category)
-
-//Ingredients.hasMany(Recepte)
-//Recepte.belongsTo(Ingredients)
 
 Recepte.hasMany(Rating)
 Rating.belongsTo(Recepte)
 
-Recepte.hasMany(FavoriteRec)
-FavoriteRec.belongsTo(Recepte)
 
 // Связующие
+
+User.belongsToMany(Recepte, {through: Favorite})
+Recepte.belongsToMany(User, {through: Favorite})
+
+
 Category.belongsToMany(Recepte, {through: CateRec })
 Recepte.belongsToMany(Category, {through: CateRec })
 
@@ -93,7 +83,6 @@ Recepte.belongsToMany(Ingredients, {through: IngRec })
 module.exports = {
     User,
     Favorite,
-    FavoriteRec,
     Recepte,
     Type,
     Category,
