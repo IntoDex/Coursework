@@ -17,7 +17,7 @@ const NavBar = () => {
         <>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand>IngCook</Navbar.Brand>
+          <NavLink to={"/"} style={{color: 'white', textDecoration: "none" }}>IngCook</NavLink>
           {user.isAuth ?
           <Nav className="ml-auto" style={{color: 'white'}}>
             <Button 
