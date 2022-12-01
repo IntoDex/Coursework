@@ -13,6 +13,11 @@ const NavBar = () => {
     const {user} = React.useContext(Context)
     const history = useNavigate()
 
+    const logOut = () => {
+      user.setUser({})
+      user.setIsAuth(false)
+    }
+
     return (
         <>
       <Navbar bg="dark" variant="dark">
@@ -27,14 +32,14 @@ const NavBar = () => {
               Админ панель
               </Button>
             <Button className="ms-3" variant={"outline-light"}
-             onClick={() => history(LOGIN_ROUTE)}
+             onClick={() => logOut()}
              >
               Выйти
               </Button>
           </Nav>
           :
           <Nav className="ml-auto" style={{color: 'white'}}>
-          <Button variant={"outline-light"} onClick={() => user.setIsAuth(true)}>Авторизоваться</Button>
+          <Button variant={"outline-light"} onClick={() => history(LOGIN_ROUTE)}>Авторизоваться</Button>
         </Nav>
 }
         </Container>

@@ -1,34 +1,13 @@
 import {makeAutoObservable} from 'mobx';
 import cake from '../assets/Test.jpg'
 
+
 export default class RecepteWeb {
     constructor() {
-        this._types = [
-            {id: 1, name: "Русская"},
-            {id: 2, name: "Японская"},
-            {id: 3, name: "Китайская"},
-            {id: 4, name: "Арабская"},
-            {id: 5, name: "Германская"},
-
-        ]
-        this._cats = [
-            {id: 1, name: "Выпечка"},
-            {id: 2, name: "Горячее"},
-            {id: 3, name: "Холодное"},
-            {id: 4, name: "Теплое"},
-            {id: 5, name: "Патрик"},
-            {id: 6, name: "Спанч-Боб"}
-        ]
-        this._ings = [
-            {id: 1, name: "Яблоко"},
-            {id: 2, name: "Апельсин"}
-        ]
-        this._receptes = [
-            {id: 1, name: "Пельмени", description: "Очень вкусное, но не очень ибо это ебанный торт, а не пельмени", rating: 3, img: cake},
-            {id: 2, name: "Борщ", description: "Вкусное, но не очень, опять же торт", rating: 4, img: cake},
-            {id: 3, name: "Роллы", description: "Не вкусное, шок, это опять же тот же самый торт", rating: 2, img: cake},
-            {id: 4, name: "Суши", description: "Сука, это опять тот же торт(((", rating: 1, img: cake},
-        ]
+        this._types = []
+        this._cats = []
+        this._ings = []
+        this._receptes = []
         this._selectedType = {}
         this._selectedCat = {}
         makeAutoObservable(this)
@@ -47,9 +26,6 @@ export default class RecepteWeb {
         this._receptes = receptes
     }
  
-
-
-
 
     setSelectedType(type) {
         this._selectedType = type
