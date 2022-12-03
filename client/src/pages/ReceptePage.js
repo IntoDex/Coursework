@@ -1,32 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Container, Row, Card, Col, Image, Button} from 'react-bootstrap'
 import cake from '../assets/Test.jpg'
 import bigStar from '../assets/bigstar.svg'
+import { useParams } from 'react-router-dom';
+import { fetchOneRecepte } from '../http/recepteAPI';
 
 
 const ReceptePage = () => {
-  const recepte = {id: 1, name: "Пельмени", description: "Описание", rating: 2, img: cake}
-  const type = {id: 1, name: "Русская"}
-  const category = {id: 1, name: "Выпечка"}
-  const ingredient = [{id: 1, name: "Яблоко"},
-    {id: 2, name: "Апельсин"}
-    ]
 
+  const [recepte, setRecepte] = useState({})
+  const {id} = useParams()
+  useEffect( () => {
+    fetchOneRecepte(id).then(data => setRecepte(data))
+  }, [])
 
   return (
     <Container className='mt-3'>
       <Row>
       <Col md={4}>
 
-        <Image width={300} height={300} src={recepte.img}/>
+        <Image width={300} height={300} src={ process.env.REACT_APP_API_URL + recepte.img}/>
         <Row>
         <Card className="d-flex flex-column align-items-center justify-content-around mt-4"
           style={{width: 200, height: 50, fontSize: 32, border: '5px solid lightgray'}}>
-            <h4>{type.name}</h4>
+            <h4>{}</h4>
         </Card>
         <Card className="d-flex flex-column align-items-center justify-content-around mt-4"
           style={{width: 200, height: 50, fontSize: 32, border: '5px solid lightgray'}}>
-            <h4>{category.name}</h4>
+            <h4>Тут должна быть категория</h4>
         </Card>
         </Row>
       </Col>
@@ -58,11 +59,7 @@ const ReceptePage = () => {
 
       <Row className='d-flex flex-column m-3'>
         <h2>Список ингредиентов</h2>
-        {ingredient.map((ingredient, recepte)=>
-        <Row key={ingredient.id} style={{background:'pink' }}>
-          {ingredient.name} : {ingredient.id}
-        </Row>
-        )}
+        
         
       </Row>
     </Container>

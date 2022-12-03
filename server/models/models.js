@@ -36,8 +36,8 @@ const Rating = sequelize.define('rating', {
 
 const Ingredients = sequelize.define('ingredients', {
     id: {type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    name: {type: DataTypes.STRING, allowNull: false},
-    description: {type: DataTypes.STRING, allowNull: false},
+    name: {type: DataTypes.STRING, allowNull: false}
+    //description: {type: DataTypes.STRING, allowNull: false},
 })
 
 // Связующие модели таблиц

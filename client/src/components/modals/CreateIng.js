@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
+import { createIng } from '../../http/recepteAPI';
 
 
 const CreateIng = ({show, onHide}) => {
+  const [value, setValue] = useState('')
+  const [value1, setValue1] = useState('')
+  
+  
+  
+  const addIng = () => {
+    createIng( {name: value, description: value1} ).then(data => {
+      setValue('')
+      onHide()
+    })
+  }
+
+
+
   return (
     <Modal
       show={show}
@@ -16,13 +31,23 @@ const CreateIng = ({show, onHide}) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form.Control placeholder='Введите название ингредиента'>
+        <Form.Control 
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        placeholder='Введите название ингредиента'>
+
+        </Form.Control>
+        <Form.Control 
+         value1={value1}
+         onChange={e => setValue1(e.target.value1)}
+        className='mt-3'
+        placeholder='Введите описание ингредиента'>
 
         </Form.Control>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="outline-danger" onClick={onHide}>Закрыть</Button>
-        <Button variant="outline-success" onClick={onHide}>Добавить</Button>
+        <Button variant="outline-success" onClick={addIng}>Добавить</Button>
       </Modal.Footer>
     </Modal>
   );

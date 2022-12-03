@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
+import { createCat } from '../../http/recepteAPI';
 
 
 const CreateCat = ({show, onHide}) => {
+  const [value, setValue] = useState('')
+  
+  
+  
+  const addCat = () => {
+    createCat( {name: value} ).then(data => {
+      setValue('')
+      onHide()
+    })
+  }
+
+
   return (
     <Modal
       show={show}
@@ -16,13 +29,16 @@ const CreateCat = ({show, onHide}) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form.Control placeholder='Введите название категории'>
+        <Form.Control 
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        placeholder='Введите название категории'>
 
         </Form.Control>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="outline-danger" onClick={onHide}>Закрыть</Button>
-        <Button variant="outline-success" onClick={onHide}>Добавить</Button>
+        <Button variant="outline-success" onClick={addCat}>Добавить</Button>
       </Modal.Footer>
     </Modal>
   );

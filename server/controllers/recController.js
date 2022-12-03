@@ -1,4 +1,4 @@
-const { Recepte, CateRec, IngRec } = require("../models/models")
+const { Recepte, CateRec, IngRec, Ingredients, Type, Category } = require("../models/models")
 const uuid = require('uuid')
 const path = require('path');
 const { json } = require("sequelize");
@@ -92,16 +92,19 @@ class RecController {
         try{
         const {name, description, typeId, catId, ingId} = req.body
         // В Связующие таблицы
+        console.log(ingId)
         const catjson = JSON.parse(catId)
-        const ingjson = JSON.parse(ingId)
+        let ingjson = JSON.parse(ingId)
+        ingjson = ingjson.map(e => e.title)
+        const ingIds = await Ingredients.findAll({attributes:["id"], where:{name: ingjson}})
         const {img} = req.files
         let fileName = uuid.v4() + ".jpg"
         img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
-        const recepte = await Recepte.create({name, description, typeId, ingId, img: fileName})
+        const recepte = await Recepte.create({name, description, typeId, ingIds, img: fileName})
 
-        for(let i = 0; i < ingjson.length; i++) {
-            await IngRec.create({recepteId: recepte.id, ingredientId: + ingjson[i]})
+        for(let i = 0; i < ingIds.length; i++) {
+            await IngRec.create({recepteId: recepte.id, ingredientId: + ingIds[i].id})
         } 
 
         for(let i = 0; i < catjson.length; i++) {
@@ -119,7 +122,7 @@ class RecController {
 
     async getAll(req, res) {
         let {name, typeId, limit, page, catId, ingId} = req.query
-        console.log(typeId, catId)
+        
         page = page || 1
         limit = limit || 9
         let offset = page * limit - limit
@@ -135,10 +138,14 @@ class RecController {
     async getOne(req, res) {
         const {id} = req.params
         const recepte = await Recepte.findOne({where: {id}
+
             //include: [{model: CateRec, as: 'categoryId'}]
             //include: [{model: IngRec, as: 'ingredientId'}]
         })
-        return res.json(recepte)
+        const type = await Type.findByPk(recepte.typeId)
+        const catIds = await CateRec.findAll({attributes:["id"], where: {recepteId: recepte.id}})
+        const cats = await Category.findAll({attributes:["name"], where: {id:catIds.map(e => e.catId)}})
+        return res.json({recepte, type, cats})
     }
 
     async delete(req, res) {
