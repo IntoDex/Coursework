@@ -34,10 +34,12 @@ export default class RecepteWeb {
 
     setSelectedType(type) {
         this._selectedType = type
+         this.setPage(1)   
     }
 
     setSelectedCat(cat) {
         this._selectedCat = cat
+        this.setPage(1)
     }
 
 

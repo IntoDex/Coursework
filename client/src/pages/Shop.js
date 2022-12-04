@@ -22,7 +22,7 @@ const Shop = () => {
   }, [])
 
   useEffect(() => {
-    fetchReceptes(recepte.selectedType.id, recepte.selectedCat.id, recepte.page, 2).then(data => {
+    fetchReceptes(recepte.selectedType.id, recepte.selectedCat.id, recepte.page, 8).then(data => {
       recepte.setReceptes(data.rows)
       recepte.setTotalCount(data.count)
     })

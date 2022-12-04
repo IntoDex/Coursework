@@ -21,19 +21,37 @@ function compairArr(arr1 = [], arr2 = []) {
     return arr1.filter(e => arr2.indexOf(e) > -1)
 }
 
-async function findrecepte(typeId, compArr, limit, offset) {
+async function findrecepte(typeId, categoryId, compArr, limit, offset) {
     let result = []
     let loffset = compArr.length < (+limit)+(+offset) ?compArr.length:(+limit)+(+offset)
-    if(typeId) {
+    if(typeId && !categoryId) {
         for(let i = offset; i < loffset; i++) {
-            console.log(i, compArr[i])
+            
             const t = await Recepte.findOne({where: {id:compArr[i], typeId}})
                 if(t) {
                     result.push(t) 
                 }
         }
     }
-    else {
+    if(!typeId && categoryId) {
+        for(let i = offset; i < loffset; i++) {
+            
+            const t = await Recepte.findOne({where: {id:compArr[i], categoryId}})
+                if(t) {
+                    result.push(t) 
+                }
+        }
+    }
+    if(typeId && categoryId) {
+        for(let i = offset; i < loffset; i++) {
+            
+            const t = await Recepte.findOne({where: {id:compArr[i], typeId, categoryId}})
+                if(t) {
+                    result.push(t) 
+                }
+        }
+    }
+    if(!typeId && !categoryId) {
         for(let i = offset; i < loffset; i++) {
         const t = await Recepte.findOne({where: {id:compArr[i]}})
             if(t) {
@@ -44,36 +62,26 @@ async function findrecepte(typeId, compArr, limit, offset) {
     return result
 }
 
-async function retrecept(typeId, catId, ingId, limit, offset) {
+async function retrecept(typeId, categoryId, ingId, limit, offset) {
     let result = []
-    if(catId && ingId) {
-        let c = await caterecs(catId)
-        let i = await ingrecs(ingId)
-        const compArr = compairArr(c, i)
-        result = await findrecepte(typeId, compArr, limit, offset)
-        result = { count: compArr.length, rows: result }
-    }
-
-    if(catId && !ingId) {
-        let c = await caterecs(catId)
-        const compArr = compairArr(c)
-        result = await findrecepte(typeId, compArr, limit, offset)
-        result = { count: compArr.length, rows: result }
-    }
-
-    if(!catId && ingId) {
+    if(ingId) {
         let i = await ingrecs(ingId)
         const compArr = compairArr(i)
-        result = await findrecepte(typeId, compArr, limit, offset)
+        result = await findrecepte(typeId, categoryId, compArr, limit, offset)
         result = { count: compArr.length, rows: result }
-
     }
 
-    if(!catId && !ingId) {
-        if(typeId) {
+    if(!ingId) {
+        if(typeId && categoryId) {
+            result = await Recepte.findAndCountAll({where: {typeId, categoryId}, limit, offset})
+        }
+        if(!typeId && categoryId) {
+            result = await Recepte.findAndCountAll({where: {categoryId}, limit, offset})
+        }
+        if(typeId && !categoryId) {
             result = await Recepte.findAndCountAll({where: {typeId}, limit, offset})
         }
-        else {
+        if(!typeId && !categoryId) {
             result = await Recepte.findAndCountAll({limit, offset})
         }
     }
@@ -87,7 +95,6 @@ class RecController {
         const {name, description, typeId, catId, ingId} = req.body
         // В Связующие таблицы
         
-        const catjson = JSON.parse(catId)
         let ingjson = JSON.parse(ingId)
         ingjson = ingjson.map(e => e.title)
         const ingIds = await Ingredients.findAll({attributes:["id"], where:{name: ingjson}})
@@ -95,14 +102,10 @@ class RecController {
         let fileName = uuid.v4() + ".jpg"
         img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
-        const recepte = await Recepte.create({name, description, typeId, ingIds, img: fileName})
+        const recepte = await Recepte.create({name, description, typeId, categoryId:catId, ingIds, img: fileName})
 
         for(let i = 0; i < ingIds.length; i++) {
             await IngRec.create({recepteId: recepte.id, ingredientId: + ingIds[i].id})
-        } 
-
-        for(let i = 0; i < catjson.length; i++) {
-            await CateRec.create({recepteId: recepte.id, categoryId: + catjson[i]})
         } 
 
         return res.json(recepte)
@@ -115,12 +118,12 @@ class RecController {
     
 
     async getAll(req, res) {
-        let {name, typeId, limit, page, catId, ingId} = req.query
+        let {name, typeId, categoryId, limit, page, ingId} = req.query
         
         page = page || 1
         limit = limit || 9
         let offset = page * limit - limit
-        let recepte = await retrecept(typeId, catId, ingId, limit, offset)
+        let recepte = await retrecept(typeId, categoryId, ingId, limit, offset)
 
         // Топорный поиск по названию 
         if(name) {
@@ -137,10 +140,8 @@ class RecController {
             //include: [{model: IngRec, as: 'ingredientId'}]
         })
         const type = await Type.findByPk(recepte.typeId)
-        const catIds = await CateRec.findAll({attributes:["id"], where: {recepteId: recepte.id}})
-        const cats = await Category.findAll({attributes:["name"], where: {id:catIds.map(e => e.catId)}})
+        const cats = await Category.findByPk(recepte.categoryId)
         const ingIds = await IngRec.findAll({attributes:["ingredientId"], where: {recepteId: recepte.id}})
-        console.log(ingIds)
         const ings = await Ingredients.findAll({attributes:["id", "name"], where: {id:ingIds.map(e => e.ingredientId)}})
 
         return res.json({recepte, type, cats, ings})

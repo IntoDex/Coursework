@@ -15,10 +15,7 @@ const RecepteItem = ({recepte}) => {
                 <Image width={150} height={150} src={process.env.REACT_APP_API_URL + recepte.img} />
                 <div className="text-black-50 mt-1 d-flex text-black-50 align-items-center justify-content-between">
                     <div>Пельмени</div>
-                    <div className="d-flex align-items-center">
-                        <div>{recepte.rating}</div>
-                        <Image width={18} height={18} src={star}/>
-                    </div>
+                    
                 </div>
                 <div>
                         {recepte.name}

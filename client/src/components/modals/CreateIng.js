@@ -5,12 +5,12 @@ import { createIng } from '../../http/recepteAPI';
 
 const CreateIng = ({show, onHide}) => {
   const [value, setValue] = useState('')
-  const [value1, setValue1] = useState('')
+ 
   
   
   
   const addIng = () => {
-    createIng( {name: value, description: value1} ).then(data => {
+    createIng( {name: value} ).then(data => {
       setValue('')
       onHide()
     })
@@ -35,13 +35,6 @@ const CreateIng = ({show, onHide}) => {
         value={value}
         onChange={e => setValue(e.target.value)}
         placeholder='Введите название ингредиента'>
-
-        </Form.Control>
-        <Form.Control 
-         value1={value1}
-         onChange={e => setValue1(e.target.value1)}
-        className='mt-3'
-        placeholder='Введите описание ингредиента'>
 
         </Form.Control>
       </Modal.Body>
