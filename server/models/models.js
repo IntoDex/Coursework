@@ -45,9 +45,7 @@ const Favorite = sequelize.define('favorite', {
     id: {type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true}
 })
 
-const CateRec = sequelize.define('cate_rec', {
-    id: {type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-})
+
 
 const IngRec = sequelize.define('ing_rec', {
     id: {type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -64,6 +62,9 @@ Rating.belongsTo(User)
 Type.hasMany(Recepte)
 Recepte.belongsTo(Type)
 
+Category.hasMany(Recepte)
+Recepte.belongsTo(Category)
+
 Recepte.hasMany(Rating)
 Rating.belongsTo(Recepte)
 
@@ -72,10 +73,6 @@ Rating.belongsTo(Recepte)
 
 User.belongsToMany(Recepte, {through: Favorite})
 Recepte.belongsToMany(User, {through: Favorite})
-
-
-Category.belongsToMany(Recepte, {through: CateRec })
-Recepte.belongsToMany(Category, {through: CateRec })
 
 Ingredients.belongsToMany(Recepte, {through: IngRec })
 Recepte.belongsToMany(Ingredients, {through: IngRec })
@@ -88,6 +85,5 @@ module.exports = {
     Category,
     Rating,
     Ingredients,
-    CateRec,
     IngRec
 }

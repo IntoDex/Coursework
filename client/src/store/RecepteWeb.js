@@ -10,9 +10,14 @@ export default class RecepteWeb {
         this._receptes = []
         this._selectedType = {}
         this._selectedCat = {}
+        this._page = 1
+        this._totalCount = 0
+        this._limit = 3
         makeAutoObservable(this)
     }
 
+
+    // Основные об
     setTypes(types) {
         this._types = types
     }
@@ -36,7 +41,18 @@ export default class RecepteWeb {
     }
 
 
+    // Пагинация
 
+    setPage(page) {
+        this._page = page
+    }
+
+    setTotalCount(count) {
+        this._totalCount = count
+    }
+
+
+    // get
 
     get types() {
         return this._types
@@ -54,13 +70,24 @@ export default class RecepteWeb {
 
 
 
-
+   // getSelected
 
     get selectedType() {
         return this._selectedType
     }
     get selectedCat() {
         return this._selectedCat
+    }
+
+
+    get totalCount() {
+        return this._totalCount
+    }
+    get page() {
+        return this._page
+    }
+    get limit() {
+        return this._limit
     }
     
 }

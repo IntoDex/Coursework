@@ -36,8 +36,10 @@ export const createRecepte = async (recepte) => {
     return data
 }
 
-export const fetchReceptes = async () => {
-    const {data} = await $host.get('api/rec?limit=30')
+export const fetchReceptes = async (typeId, categoryId, page, limit = 5) => {
+    const {data} = await $host.get('api/rec', {params: {
+        typeId, categoryId, page, limit
+    }})
     return data
 }
 

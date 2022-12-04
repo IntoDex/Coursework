@@ -1,14 +1,8 @@
-const { Recepte, CateRec, IngRec, Ingredients, Type, Category } = require("../models/models")
+const { Recepte, IngRec, Ingredients, Type, Category } = require("../models/models")
 const uuid = require('uuid')
 const path = require('path');
 const { json } = require("sequelize");
 const ApiError = require('../error/ApiError');
-
-async function caterecs(arr) {
-    let caterec = await CateRec.findAll({attributes:['recepteId'], where: {categoryId: JSON.parse(arr)}})
-    caterec = Array.from(new Set (caterec.map(e => e.dataValues.recepteId)))
-    return caterec
-}
 
 async function ingrecs(arr) {
     let ingrec = await IngRec.findAll({attributes:['recepteId'], where: {ingredientId: JSON.parse(arr)}})
@@ -92,7 +86,7 @@ class RecController {
         try{
         const {name, description, typeId, catId, ingId} = req.body
         // В Связующие таблицы
-        console.log(ingId)
+        
         const catjson = JSON.parse(catId)
         let ingjson = JSON.parse(ingId)
         ingjson = ingjson.map(e => e.title)
@@ -145,7 +139,11 @@ class RecController {
         const type = await Type.findByPk(recepte.typeId)
         const catIds = await CateRec.findAll({attributes:["id"], where: {recepteId: recepte.id}})
         const cats = await Category.findAll({attributes:["name"], where: {id:catIds.map(e => e.catId)}})
-        return res.json({recepte, type, cats})
+        const ingIds = await IngRec.findAll({attributes:["ingredientId"], where: {recepteId: recepte.id}})
+        console.log(ingIds)
+        const ings = await Ingredients.findAll({attributes:["id", "name"], where: {id:ingIds.map(e => e.ingredientId)}})
+
+        return res.json({recepte, type, cats, ings})
     }
 
     async delete(req, res) {
