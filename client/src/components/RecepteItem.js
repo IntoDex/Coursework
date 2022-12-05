@@ -7,6 +7,8 @@ import Image from "react-bootstrap/Image"
 import {useNavigate} from "react-router-dom"
 import { RECEPTE_ROUTE } from "../utils/consts";
 
+
+
 const RecepteItem = ({recepte}) => {
     const history = useNavigate()
     return (
@@ -14,7 +16,7 @@ const RecepteItem = ({recepte}) => {
             <Card style={{width: 150, cursor: 'pointer'}} border={"light"}>
                 <Image width={150} height={150} src={process.env.REACT_APP_API_URL + recepte.img} />
                 <div className="text-black-50 mt-1 d-flex text-black-50 align-items-center justify-content-between">
-                    <div>Пельмени</div>
+                    <div>Рецепт</div>
                     
                 </div>
                 <div>

@@ -35,6 +35,7 @@ const ReceptePage = () => {
       <Col md={4}>
           <Row className="d-flex flex-column align-content-center">
             <h2>{recepteData?.recepte?.name}</h2>
+            <h2>Номер рецепта: "{recepteData?.recepte?.id}"</h2>
             <div
               className='d-flex align-items-center justify-content-center'
               style={{background: `url(${bigStar})` + 'no-repeat center center', width:240, height: 240, backgroundSize: 'cover', fontSize:64}}

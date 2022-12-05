@@ -47,3 +47,10 @@ export const fetchOneRecepte = async (id) => {
     const {data} = await $host.get('api/rec/' + id)
     return data
 }
+
+
+// Удаление
+export const deleteRecepte = async (id) => {
+    const {data} = await $authHost.delete('api/rec/' + id)
+    return data
+}

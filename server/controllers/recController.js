@@ -148,7 +148,7 @@ class RecController {
     }
 
     async delete(req, res) {
-        const {id} = req.body
+        const {id} = req.params
         const recepte = await Recepte.destroy({where: {id}})
         return res.json(recepte)
     }
