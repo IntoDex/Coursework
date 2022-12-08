@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-import cake from '../assets/Test.jpg'
+
 
 
 export default class RecepteWeb {

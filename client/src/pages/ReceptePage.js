@@ -2,11 +2,17 @@ import React, { useEffect, useState } from 'react';
 import {Container, Row, Card, Col, Image, Button, ModalTitle} from 'react-bootstrap'
 import cake from '../assets/Test.jpg'
 import bigStar from '../assets/bigstar.svg'
-import { useParams } from 'react-router-dom';
-import { fetchOneRecepte } from '../http/recepteAPI';
+import { useNavigate, useParams } from 'react-router-dom';
+import { addFav, fetchOneRecepte, fetchisFav } from '../http/recepteAPI';
+import { FAVORITE_ROUTE, LOGIN_ROUTE } from '../utils/consts';
+import { Context } from '..';
 
 
 const ReceptePage = () => {
+
+  const {favorite, user, isfavorite} = React.useContext(Context)
+
+  const history = useNavigate()
 
   const [recepteData, setRecepte] = useState({})
   
@@ -36,12 +42,7 @@ const ReceptePage = () => {
           <Row className="d-flex flex-column align-content-center">
             <h2>{recepteData?.recepte?.name}</h2>
             <h2>Номер рецепта: "{recepteData?.recepte?.id}"</h2>
-            <div
-              className='d-flex align-items-center justify-content-center'
-              style={{background: `url(${bigStar})` + 'no-repeat center center', width:240, height: 240, backgroundSize: 'cover', fontSize:64}}
-            >
-                {recepteData?.recepte?.rating}
-            </div>
+            
           
           </Row>   
       </Col>
@@ -54,7 +55,15 @@ const ReceptePage = () => {
             
 
         </Card>
-        <Button variant={'outline-dark'}>Добавить в избранное</Button>
+        <Button 
+        onClick={() => {
+          if(user.isAuth) {
+          favorite.addFav(user.user.id, recepteData?.recepte?.id); 
+          history(FAVORITE_ROUTE) 
+        } else {
+          history(LOGIN_ROUTE)
+        }} }
+        variant={'outline-dark'}>Добавить в избранное</Button>
       </Col>
       </Row>
 
@@ -62,7 +71,7 @@ const ReceptePage = () => {
       <Row className='d-flex flex-column m-3'>
         <h2>Список ингредиентов</h2>
         {recepteData?.ings?.map((ingredient, recepte)=>
-          <Row key={ingredient.id} style={{background:'pink'}}>
+          <Row key={ingredient.id} style={{background:'dark'}}>
             {ingredient.name} : {ingredient.id}
 
           </Row>

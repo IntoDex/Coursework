@@ -10,7 +10,8 @@ router.get('/auth',authMiddleware, userController.check )
 // Избранное
 router.post('/favorite', authMiddleware, userController.addFav)
 router.get('/favorite', authMiddleware, userController.checkFav)
-router.delete('/favorite', authMiddleware, userController.delFav)
+router.delete('/favorite/:id', authMiddleware, userController.delFav)
+router.post('/isfavorite', authMiddleware, userController.isFavorite)
 
 
 

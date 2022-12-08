@@ -59,8 +59,7 @@ class UserController {
 
     async addFav(req, res, next) {
         try { 
-            const {recepteId, userId} = req.query // req.body
-            console.log(recepteId)
+            const {recepteId, userId} = req.body // req.body
             const favorite = await Favorite.create({userId, recepteId})
             
             return res.json(favorite)
@@ -75,6 +74,21 @@ class UserController {
         const favorite = await Favorite.destroy({where: {id}})
         return res.json(favorite)
     }
+
+    async isFavorite(req, res, next) {
+        const {recepteId, userId} = req.body
+        let isfavorite = false
+        const isFav = await Favorite.findAll({where:{userId, recepteId}})
+        if(isFav.length > 1) {
+            isfavorite = true
+        }
+        return res.json(isfavorite)
+    }
+
+
+
+
+
 
 }
 

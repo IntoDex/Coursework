@@ -54,3 +54,20 @@ export const deleteRecepte = async (id) => {
     const {data} = await $authHost.delete('api/rec/' + id)
     return data
 }
+
+// Избранное 
+export const addFav = async (recepteId, userId) => {
+    const {data} = await $authHost.post('api/user/favorite', {recepteId, userId})
+    return data
+}
+export const fetchFav = async () => {
+    const {data} = await $authHost.get('api/user/favorite')
+    return data
+}
+export const deleteFav = async (id) => {
+    const {data} = await $authHost.delete('api/user/favorite/' + id)
+    return data
+}
+export const fetchisFav = async (recepteId, userId) => {
+    const {data} = await $authHost.post('api/user/isfavorite', {recepteId, userId})
+}
